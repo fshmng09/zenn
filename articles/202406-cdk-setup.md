@@ -8,7 +8,7 @@ published: true
 
 # 概要
 
-会社で cdk のセットアップ方法を共有する必要があったので、zenn の記事にしようと思いました。
+各所で cdk のセットアップ方法を共有する必要があったので、zenn の記事にしようと思いました。
 
 主に以下のツールを使って `cdk synth` が通るまでの手順を記載しています。
 
@@ -126,13 +126,13 @@ global/local の仕様は全ての hogenv 兄弟で大体同じです。
 
 ## CDK の動作確認
 
-[最初の AWS CDK アプリ](https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/hello_world.html) に従って、`cdk deploy` してみてください。
+[最初の AWS CDK アプリ](https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/hello_world.html) に従って、`npx cdk deploy` してみてください。
 
 自分が想像できるうまくいかないケースは下記になります。
 
 #### bootstrap を忘れている
 
-初めてデプロイするアカウント/リージョンでは `cdk bootstrap` を行う必要があります。
+初めてデプロイするアカウント/リージョンでは `npx cdk bootstrap` を行う必要があります。
 
 自分はよく bootstrap を忘れて、なんだっけ？となります。
 
@@ -151,6 +151,14 @@ ref) https://docs.aws.amazon.com/ja_jp/cdk/v2/guide/bootstrapping.html
 例えば python で `source env/bin/activate` していると、 cli のバージョンが変わってうまく動かなかったりします。
 
 自分はこの問題に最初出会ってから解消するまでに数日費やしました。
+
+#### npx を使っていない
+
+あまり詳しくはないのですが、npx を使うと `package.json` で cdk のバージョンが管理できる様です。
+
+npx を使っていないと、 homebrew などでインストールした cdk が使用され、バージョンが合わず動かなくなる様です。
+
+homebrew でインストールした cdk はバージョンを管理しにくいので、npx 経由で使用しましょう。
 
 # 終わりに
 
