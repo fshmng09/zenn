@@ -1,0 +1,31 @@
+name: Claude Session Keep-Alive
+
+# 1時間ごとに実行してSubscriptionの5時間ローリングウィンドウを活用
+on:
+  schedule:
+    # 毎時0分に実行 (UTC)
+    - cron: '0 * * * *'
+
+  # 手動実行も可能
+  workflow_dispatch:
+
+jobs:
+  keep-session-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Send dummy message to Claude (OAuth)
+        uses: anthropics/claude-code-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: "Hi"
+
+      - name: Log execution
+        run: |
+          echo "Dummy session started at $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          echo "Next execution in 1 hour"
+          echo "Using Pro/Max Subscription OAuth token"
