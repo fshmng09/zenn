@@ -1,10 +1,10 @@
 name: Claude Session Keep-Alive
 
-# 1時間ごとに実行してSubscriptionの5時間ローリングウィンドウを活用
+# 2時間ごとに実行してSubscriptionの5時間ローリングウィンドウを活用
 on:
   schedule:
-    # 毎時0分に実行 (UTC)
-    - cron: '0 * * * *'
+    # 2時間おきに実行 (UTC) - 0時、2時、4時、6時...
+    - cron: '0 */2 * * *'
 
   # 手動実行も可能
   workflow_dispatch:
@@ -28,5 +28,5 @@ jobs:
       - name: Log execution
         run: |
           echo "Dummy session started at $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
-          echo "Next execution in 1 hour"
+          echo "Next execution in 2 hours"
           echo "Using Pro/Max Subscription OAuth token"
