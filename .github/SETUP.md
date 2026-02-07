@@ -1,5 +1,28 @@
 # GitHub Actions セットアップガイド
 
+## Codex Session Keep-Alive（ChatGPTサブスクリプション）の設定方法
+
+`codex-keepalive.yml` は API キーではなく、Codex CLI の認証キャッシュを使って実行します。
+
+### 前提条件
+
+- ChatGPT Plus/Pro/Team/Edu/Enterprise など Codex が使えるプラン
+- ローカルで `codex login` 済みであること
+- リポジトリの管理者権限
+
+### GitHub Secrets の設定
+
+1. ローカルで `~/.codex/auth.json` を確認
+2. GitHub リポジトリの `Settings` → `Secrets and variables` → `Actions` を開く
+3. `New repository secret` で以下を作成
+   - **Name**: `CODEX_AUTH_JSON`
+   - **Secret**: `~/.codex/auth.json` の中身をそのまま貼り付け
+
+### 注意事項
+
+- `~/.codex/auth.json` はアクセストークンを含むため厳重に扱ってください
+- トークン期限切れ時は、再ログイン後に `CODEX_AUTH_JSON` を更新してください
+
 ## Claude Session Keep-Alive の設定方法
 
 このワークフローは1時間ごとにClaude APIにダミーメッセージを送信し、セッションのローリングウィンドウを活用します。
