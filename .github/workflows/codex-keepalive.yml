@@ -22,6 +22,7 @@ jobs:
       - name: Restore Codex auth cache (ChatGPT subscription)
         env:
           CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
           if [ -z "$CODEX_AUTH_JSON" ]; then
             echo "CODEX_AUTH_JSON secret is not set."
@@ -31,6 +32,9 @@ jobs:
           mkdir -p .codex-home
           printf '%s' "$CODEX_AUTH_JSON" > .codex-home/auth.json
           chmod 600 .codex-home/auth.json
+
+          # openai/codex-action@v1 currently expects this file even when no API key is provided.
+          printf '{"port":1}\n' > ".codex-home/${GITHUB_RUN_ID}.json"
 
       - name: Send dummy message to Codex
         uses: openai/codex-action@v1
