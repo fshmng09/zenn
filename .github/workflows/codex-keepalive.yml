@@ -1,0 +1,45 @@
+name: Codex Session Keep-Alive
+
+# 2時間ごとに実行してセッションを定期的に起動
+on:
+  schedule:
+    # 2時間おきに実行 (UTC) - 0時、2時、4時、6時...
+    - cron: '0 */2 * * *'
+
+  # 手動実行も可能
+  workflow_dispatch:
+
+jobs:
+  keep-session-alive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Restore Codex auth cache (ChatGPT subscription)
+        env:
+          CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
+        run: |
+          if [ -z "$CODEX_AUTH_JSON" ]; then
+            echo "CODEX_AUTH_JSON secret is not set."
+            exit 1
+          fi
+
+          mkdir -p .codex-home
+          printf '%s' "$CODEX_AUTH_JSON" > .codex-home/auth.json
+          chmod 600 .codex-home/auth.json
+
+      - name: Send dummy message to Codex
+        uses: openai/codex-action@v1
+        with:
+          prompt: "Hi"
+          codex-home: ./.codex-home
+
+      - name: Log execution
+        run: |
+          echo "Dummy Codex session started at $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          echo "Next execution in 2 hours"
+          echo "Using CODEX_AUTH_JSON (ChatGPT subscription auth cache)"
